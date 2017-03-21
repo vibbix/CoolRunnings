@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -21,15 +22,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class WifiActivity extends AppCompatActivity {
+    private final static String TAG = "WiFiActivity";
+    @BindView(R.id.rescan_wifi)
+    AppCompatButton rescan;
+    @BindView(R.id.wifi_list)
+    ListView wifilist;
     private WifiManager wifi;
     private int size = 0;
     private List<ScanResult> results;
-    private final static String TAG = "WiFiActivity";
 
-    @BindView(R.id.rescan_wifi)
-    AppCompatButton rescan;
-    @BindView(R.id.wifi_name)
-    TextView wifiname;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +38,7 @@ public class WifiActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Log.d(TAG, "WiFiActivity Initialized");
+        this.rescan.setGravity(Gravity.CENTER);
     }
     @OnClick(R.id.rescan_wifi)
     public void rescanWiFi(View view){
@@ -51,8 +53,7 @@ public class WifiActivity extends AppCompatActivity {
             {
                 Log.d(TAG, "Recieved data");
                 results = wifi.getScanResults();
-                size = results.size();
-                setWifiname();
+                updateAdapter();
             }
         }, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
@@ -65,23 +66,8 @@ public class WifiActivity extends AppCompatActivity {
             wifi.setWifiEnabled(true);
         }
     }
-    private void setWifiname(){
-        Log.d(TAG, "Building Wifiname");
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("SSID\tMAC ADDRESS\tSIGNAL\n");
-        for (ScanResult sr : results){
-            sb.append(sr.SSID);
-            sb.append('\t');
-            sb.append(sr.BSSID);
-            sb.append('\t');
-            sb.append(WifiManager.calculateSignalLevel(sr.level,100));
-            sb.append("/100");
-            sb.append('\n');
-        }
-        this.wifiname.setText(sb.toString());
-        Log.d(TAG, "WiFI data set");
-
+    private void updateAdapter() {
+        this.wifilist.setAdapter(new WiFiListAdapter(this, this.results));
     }
-
 }

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">CoolRunnings</string>
     <string name="rescan">Rescan</string>
+    <string name="exampleSSID">BakeBox</string>
+    <string name="example_mac">FF:FF:FF:FF:FF:FF:FF</string>
+    <string name="example_signal_strength">90/100</string>
 </resources>
