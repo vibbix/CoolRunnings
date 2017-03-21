@@ -35,9 +35,8 @@ public class WifiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wifi);
         ButterKnife.bind(this);
-        wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Log.d(TAG, "WiFiActivity Initialized");
-
     }
     @OnClick(R.id.rescan_wifi)
     public void rescanWiFi(View view){
@@ -70,13 +69,14 @@ public class WifiActivity extends AppCompatActivity {
         Log.d(TAG, "Building Wifiname");
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SSID\tMAC ADDRESS\tSIGNAL")
+        sb.append("SSID\tMAC ADDRESS\tSIGNAL\n");
         for (ScanResult sr : results){
             sb.append(sr.SSID);
             sb.append('\t');
             sb.append(sr.BSSID);
             sb.append('\t');
-
+            sb.append(WifiManager.calculateSignalLevel(sr.level,100));
+            sb.append("/100");
             sb.append('\n');
         }
         this.wifiname.setText(sb.toString());
