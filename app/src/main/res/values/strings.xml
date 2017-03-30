@@ -4,4 +4,11 @@
     <string name="exampleSSID">BakeBox</string>
     <string name="example_mac">FF:FF:FF:FF:FF:FF:FF</string>
     <string name="example_signal_strength">90/100</string>
+    <string name="title_activity_nav">CoolRunnings</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="navigation_scan">Scan</string>
+    <string name="navigation_map">Map</string>
+    <string name="navigation_settings">Settings</string>
 </resources>
