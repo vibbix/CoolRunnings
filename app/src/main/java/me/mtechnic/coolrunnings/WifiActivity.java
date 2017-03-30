@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public class WifiActivity extends AppCompatActivity {
     AppCompatButton rescan;
     @BindView(R.id.wifi_list)
     ListView wifilist;
+    @BindView(R.id.distance_estimate)
+    TextView distanceEstimate;
     private WifiManager wifi;
     private int size = 0;
     private List<ScanResult> results;
@@ -69,5 +72,17 @@ public class WifiActivity extends AppCompatActivity {
 
     private void updateAdapter() {
         this.wifilist.setAdapter(new WiFiListAdapter(this, this.results));
+        for (ScanResult sr : this.results) {
+            if (sr.BSSID.toLowerCase().equals("00:22:75:d6:8e:54")) {
+                String s = "Distance from bakebox:" + calculateDistance(sr.level,
+                        sr.frequency);
+                this.distanceEstimate.setText(s);
+            }
+        }
+    }
+
+    public double calculateDistance(double signalLevelInDb, double freqInMHz) {
+        double exp = (27.55 - (20 * Math.log10(freqInMHz)) + Math.abs(signalLevelInDb)) / 20.0;
+        return Math.pow(10.0, exp);
     }
 }
