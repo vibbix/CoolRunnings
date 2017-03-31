@@ -1,23 +1,41 @@
 package me.mtechnic.coolrunnings;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SeekBar;
 import android.widget.TextView;
+
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NavActivity extends AppCompatActivity {
+    private static final String TAG = "NavActivity";
     @BindView(R.id.message)
     TextView mTextMessage;
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
     @BindView(R.id.toolbar)
     android.support.v7.widget.Toolbar toolbar;
+    @BindView(R.id.scalarSeekBar)
+    SeekBar scalarSeekBar;
+    private WifiManager wifi;
+    private int size = 0;
+    private List<ScanResult> results;
+    private WiFiResolver resolver;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -44,6 +62,15 @@ public class NavActivity extends AppCompatActivity {
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.action_refresh:
+                            wifi.startScan();
+                            registerReceiver(new BroadcastReceiver() {
+                                @Override
+                                public void onReceive(Context c, Intent intent) {
+                                    Log.d(TAG, "Recieved data");
+                                    results = wifi.getScanResults();
+                                    updateResults();
+                                }
+                            }, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
                             return true;
                     }
                     return false;
@@ -65,8 +92,35 @@ public class NavActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.navigation);
-
         toolbar.setOnMenuItemClickListener(mOnMenuItemClickListListener);
+        wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        Log.d(TAG, "WiFiActivity Initialized");
+        this.resolver = new WiFiResolver();
+        this.scalarSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                resolver.setScalar(((double) progress) / 10);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private void updateResults() {
+        for (ScanResult sr : this.results) {
+            resolver.setDistances(sr);
+        }
+        double[] coordinates = resolver.getCoordinate();
+        Log.d(TAG, String.format("New coordinate: %s", Arrays.toString(coordinates)));
+
     }
 
 }
