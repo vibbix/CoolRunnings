@@ -131,11 +131,12 @@ public class NavActivity extends AppCompatActivity {
         Bitmap b = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
         Paint p = new Paint();
-        p.setStrokeWidth(0);
-        p.setColor(Color.BLUE);
+        p.setStrokeWidth(1);
+        p.setColor(Color.BLACK);
+        p.setStyle(Paint.Style.STROKE);
         c.drawRect(0.0f, 0.0f, 100.0f, 66.0f, p);
-        p.setColor(Color.YELLOW);
-        c.drawCircle((float) coordinates[0], (float) coordinates[1], 5, p);
+        p.setColor(Color.GREEN);
+        c.drawCircle((float) coordinates[0], (float) coordinates[1], 1, p);
         ImageCanvas.setImageBitmap(b);
     }
 
