@@ -4,6 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -13,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -32,6 +37,8 @@ public class NavActivity extends AppCompatActivity {
     android.support.v7.widget.Toolbar toolbar;
     @BindView(R.id.scalarSeekBar)
     SeekBar scalarSeekBar;
+    @BindView(R.id.ImageCanvas)
+    ImageView ImageCanvas;
     private WifiManager wifi;
     private int size = 0;
     private List<ScanResult> results;
@@ -99,7 +106,8 @@ public class NavActivity extends AppCompatActivity {
         this.scalarSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                resolver.setScalar(((double) progress) / 10);
+                double scalar = ((double) progress) / 10;
+                resolver.setScalar(scalar);
             }
 
             @Override
@@ -120,7 +128,16 @@ public class NavActivity extends AppCompatActivity {
         }
         double[] coordinates = resolver.getCoordinate();
         Log.d(TAG, String.format("New coordinate: %s", Arrays.toString(coordinates)));
-
+        Bitmap b = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        Paint p = new Paint();
+        p.setStrokeWidth(0);
+        p.setColor(Color.BLUE);
+        c.drawRect(0.0f, 0.0f, 100.0f, 66.0f, p);
+        p.setColor(Color.YELLOW);
+        c.drawCircle((float) coordinates[0], (float) coordinates[1], 5, p);
+        ImageCanvas.setImageBitmap(b);
     }
+
 
 }
