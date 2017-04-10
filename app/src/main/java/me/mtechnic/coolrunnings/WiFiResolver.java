@@ -14,7 +14,8 @@ import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer
 public class WiFiResolver {
     //{bakebox, CoolRunnings, ddwrt{
     private double[][] positions = {{15.0, 0.0}, {30, 22.5}, {45.0, 15.0}};
-    private double[] distances = new double[]{8.06, 13.97, 23.32};
+    private double[] distances = new double[]{8.06, 4.97, 23.32};
+    private double[] scaled_distances = new double[]{8.06, 13.97, 23.32};
     private double scalar = 1.0;
 
     private static double calculateDistance(double signalLevelInDb, double freqInMHz) {
@@ -26,8 +27,30 @@ public class WiFiResolver {
         this.positions[index] = coords;
     }
 
+    public void setScalar(double scalar) {
+        this.scalar = scalar;
+        for (int i = 0; i < distances.length; i++) {
+            scaled_distances[i] = distances[i] * scalar;
+        }
+    }
+
+    public double[] getCoordinate(boolean scaled) {
+        NonLinearLeastSquaresSolver solver;
+        if (scaled) {
+            solver = new NonLinearLeastSquaresSolver(new TrilaterationFunction(positions, scaled_distances), new LevenbergMarquardtOptimizer());
+        } else {
+            solver = new NonLinearLeastSquaresSolver(new TrilaterationFunction(positions, distances), new LevenbergMarquardtOptimizer());
+        }
+        LeastSquaresOptimizer.Optimum optimum = solver.solve();
+        return optimum.getPoint().toArray();
+    }
+
+    public double[] getDistances() {
+        return this.scaled_distances;
+    }
+
     public void setDistances(ScanResult sr) {
-        double distance = scalar * calculateDistance(sr.level, sr.frequency);
+        double distance = calculateDistance(sr.level, sr.frequency);
         if (sr.BSSID.toLowerCase().equals(AccessPoints.BakeBox.getMACAddress())) {
             distances[0] = distance;
         } else if (sr.BSSID.toLowerCase().equals(AccessPoints.CoolRunnings.getMACAddress())) {
@@ -35,16 +58,6 @@ public class WiFiResolver {
         } else if ((sr.BSSID.toLowerCase().equals(AccessPoints.DDWRT.getMACAddress()))) {
             distances[2] = distance;
         }
-    }
-
-    public void setScalar(double scalar) {
-        this.scalar = scalar;
-    }
-
-    public double[] getCoordinate() {
-        NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(new TrilaterationFunction(positions, distances), new LevenbergMarquardtOptimizer());
-        LeastSquaresOptimizer.Optimum optimum = solver.solve();
-        return optimum.getPoint().toArray();
     }
 
     enum AccessPoints {

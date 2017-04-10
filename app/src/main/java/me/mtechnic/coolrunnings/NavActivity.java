@@ -20,15 +20,18 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NavActivity extends AppCompatActivity {
     private static final String TAG = "NavActivity";
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 1;
     @BindView(R.id.message)
     TextView mTextMessage;
     @BindView(R.id.navigation)
@@ -48,7 +51,7 @@ public class NavActivity extends AppCompatActivity {
     private List<ScanResult> results;
     private WiFiResolver resolver;
     private double[] coordinates = new double[]{0, 0, 0};
-
+    private Random rand;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -78,7 +81,8 @@ public class NavActivity extends AppCompatActivity {
                             registerReceiver(new BroadcastReceiver() {
                                 @Override
                                 public void onReceive(Context c, Intent intent) {
-                                    Log.d(TAG, "Recieved data");
+                                    
+                                    Log.d(TAG, "Received data");
                                     results = wifi.getScanResults();
                                     updateResults();
                                     render();
@@ -99,6 +103,7 @@ public class NavActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.rand = new Random();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav);
         ButterKnife.bind(this);
@@ -134,15 +139,16 @@ public class NavActivity extends AppCompatActivity {
         for (ScanResult sr : this.results) {
             resolver.setDistances(sr);
         }
-        double[] coordinates = resolver.getCoordinate();
+        double[] coordinates = resolver.getCoordinate(true);
         String debug = String.format("New coordinate: %s", Arrays.toString(coordinates));
         Log.d(TAG, debug);
-        debugcoords.setText(Arrays.toString(coordinates));
+        debugcoords.setText(Arrays.toString(coordinates) + "\n" + Arrays.toString(resolver.getDistances()));
+        Toast.makeText(this, "ScanResults updated" + Arrays.toString(resolver.getDistances()), Toast.LENGTH_SHORT).show();
 
     }
 
     private void render() {
-        double[] coordinates = resolver.getCoordinate();
+        double[] coordinates = resolver.getCoordinate(true);
         debugcoords.setText(Arrays.toString(coordinates));
         Bitmap b = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
@@ -151,7 +157,8 @@ public class NavActivity extends AppCompatActivity {
         p.setColor(Color.BLUE);
         c.drawRect(0.0f, 0.0f, 100.0f, 66.0f, p);
         p.setColor(Color.YELLOW);
-        c.drawCircle((float) coordinates[0], (float) coordinates[1], 5, p);
+        c.drawCircle((float) coordinates[0] * 3, (float) coordinates[1] * 3, 3, p);
+        this.scalarSeekBar.setProgress(this.scalarSeekBar.getProgress());
         ImageCanvas.setImageBitmap(b);
     }
 
