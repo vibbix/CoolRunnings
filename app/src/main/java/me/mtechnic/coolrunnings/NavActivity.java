@@ -1,9 +1,11 @@
 package me.mtechnic.coolrunnings;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +15,8 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -81,7 +85,7 @@ public class NavActivity extends AppCompatActivity {
                             registerReceiver(new BroadcastReceiver() {
                                 @Override
                                 public void onReceive(Context c, Intent intent) {
-                                    
+
                                     Log.d(TAG, "Received data");
                                     results = wifi.getScanResults();
                                     updateResults();
@@ -111,6 +115,18 @@ public class NavActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.navigation);
         toolbar.setOnMenuItemClickListener(mOnMenuItemClickListListener);
+        if (ContextCompat.checkSelfPermission(NavActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(NavActivity.this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else {
+                ActivityCompat.requestPermissions(NavActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
+            }
+        }
         wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Log.d(TAG, "WiFiActivity Initialized");
         this.resolver = new WiFiResolver();
