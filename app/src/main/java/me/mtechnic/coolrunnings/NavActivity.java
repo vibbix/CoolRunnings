@@ -39,10 +39,15 @@ public class NavActivity extends AppCompatActivity {
     SeekBar scalarSeekBar;
     @BindView(R.id.ImageCanvas)
     ImageView ImageCanvas;
+    @BindView(R.id.DebugCoords)
+    TextView debugcoords;
+    @BindView(R.id.DebugScalar)
+    TextView debugscalar;
     private WifiManager wifi;
     private int size = 0;
     private List<ScanResult> results;
     private WiFiResolver resolver;
+    private double[] coordinates = new double[]{0, 0, 0};
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -76,6 +81,7 @@ public class NavActivity extends AppCompatActivity {
                                     Log.d(TAG, "Recieved data");
                                     results = wifi.getScanResults();
                                     updateResults();
+                                    render();
                                 }
                             }, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
                             return true;
@@ -108,6 +114,8 @@ public class NavActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 double scalar = ((double) progress) / 10;
                 resolver.setScalar(scalar);
+                debugscalar.setText(String.valueOf(scalar) + "x");
+                render();
             }
 
             @Override
@@ -127,7 +135,15 @@ public class NavActivity extends AppCompatActivity {
             resolver.setDistances(sr);
         }
         double[] coordinates = resolver.getCoordinate();
-        Log.d(TAG, String.format("New coordinate: %s", Arrays.toString(coordinates)));
+        String debug = String.format("New coordinate: %s", Arrays.toString(coordinates));
+        Log.d(TAG, debug);
+        debugcoords.setText(Arrays.toString(coordinates));
+
+    }
+
+    private void render() {
+        double[] coordinates = resolver.getCoordinate();
+        debugcoords.setText(Arrays.toString(coordinates));
         Bitmap b = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
         Paint p = new Paint();
@@ -138,6 +154,5 @@ public class NavActivity extends AppCompatActivity {
         c.drawCircle((float) coordinates[0], (float) coordinates[1], 5, p);
         ImageCanvas.setImageBitmap(b);
     }
-
 
 }
