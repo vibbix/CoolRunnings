@@ -43,4 +43,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-vector-drawable:25.3.1'
+    compile 'com.flaviofaria:kenburnsview:1.0.7'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.florent37:diagonallayout:1.0.4'
+
 }

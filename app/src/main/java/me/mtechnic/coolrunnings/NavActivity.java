@@ -19,7 +19,8 @@ public class NavActivity extends AppCompatActivity {
     BottomNavigationView navigation;
     @BindView(R.id.toolbar)
     android.support.v7.widget.Toolbar toolbar;
-    private WiFiFragment wiFiFragment;
+    private WiFiFragment wifiFragment;
+    private AboutFragment aboutFragment;
     private FragmentManager fragMan;
     private Fragment currentFragment;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -29,10 +30,10 @@ public class NavActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_scan:
-                    currentFragment = wiFiFragment;
+                    currentFragment = wifiFragment;
                     break;
                 case R.id.navigation_settings:
-                    //currentFragment = aboutFragment;
+                    currentFragment = aboutFragment;
                     break;
             }
             final FragmentTransaction ft = fragMan.beginTransaction();
@@ -44,7 +45,7 @@ public class NavActivity extends AppCompatActivity {
             item -> {
                 switch (item.getItemId()) {
                     case R.id.action_refresh:
-                        wiFiFragment.scan();
+                        wifiFragment.scan();
                         return true;
                 }
                 return false;
@@ -63,14 +64,14 @@ public class NavActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nav);
         ButterKnife.bind(this);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        this.wiFiFragment = new WiFiFragment();
+        this.wifiFragment = new WiFiFragment();
+        this.aboutFragment = new AboutFragment();
+        this.fragMan = getSupportFragmentManager();
+        this.currentFragment = this.wifiFragment;
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.navigation);
         toolbar.setOnMenuItemClickListener(mOnMenuItemClickListListener);
-        this.fragMan = getSupportFragmentManager();
-        this.currentFragment = this.wiFiFragment;
         final FragmentTransaction ft = fragMan.beginTransaction();
         ft.add(R.id.fragmentContainer, this.currentFragment).commit();
-
     }
 }
