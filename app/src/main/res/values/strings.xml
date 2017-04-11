@@ -4,4 +4,15 @@
     <string name="exampleSSID">BakeBox</string>
     <string name="example_mac">FF:FF:FF:FF:FF:FF:FF</string>
     <string name="example_signal_strength">90/100</string>
+    <string name="title_activity_nav">CoolRunnings</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_scan">Scan</string>
+    <string name="title_map">Map</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_refresh">Refresh</string>
+    <string name="username_mark">/ vibbix</string>
+    <string name="username_dechristopher">/ dechristopher</string>
+    <string name="github_vibbix">https://github.com/vibbix</string>
+    <string name="github_dechristopher">https://github.com/dechristopher</string>
 </resources>
