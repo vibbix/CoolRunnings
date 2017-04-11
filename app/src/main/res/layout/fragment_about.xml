@@ -10,7 +10,7 @@
     <com.github.florent37.diagonallayout.DiagonalLayout
         android:id="@+id/diagonallayout"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="275dp"
         android:elevation="10dp"
         app:diagonal_angle="15"
         app:diagonal_direction="left"

@@ -13,4 +13,6 @@
     <string name="title_refresh">Refresh</string>
     <string name="username_mark">/ vibbix</string>
     <string name="username_dechristopher">/ dechristopher</string>
+    <string name="github_vibbix">https://github.com/vibbix</string>
+    <string name="github_dechristopher">https://github.com/dechristopher</string>
 </resources>
