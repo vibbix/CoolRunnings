@@ -32,12 +32,16 @@ public class NavActivity extends AppCompatActivity {
                 case R.id.navigation_scan:
                     currentFragment = wifiFragment;
                     break;
-                case R.id.navigation_settings:
+                case R.id.navigation_about:
                     currentFragment = aboutFragment;
                     break;
             }
             final FragmentTransaction ft = fragMan.beginTransaction();
-            ft.replace(R.id.fragmentContainer, currentFragment).commit();
+            ft.setCustomAnimations(R.anim.fragment_slide_left_enter,
+                    R.anim.fragment_slide_left_exit,
+                    R.anim.fragment_slide_right_enter,
+                    R.anim.fragment_slide_right_exit)
+                    .replace(R.id.fragmentContainer, currentFragment).commit();
             return true;
         }
     };

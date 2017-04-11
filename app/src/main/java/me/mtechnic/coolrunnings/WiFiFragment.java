@@ -42,9 +42,11 @@ public class WiFiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedinstancestate) {
         View view = inflater.inflate(R.layout.fragment_wifi, container, false);
         ButterKnife.bind(this, view);
-        wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Log.d(TAG, "WiFiActivity Initialized");
-        this.resolver = new WiFiResolver();
+        if (this.wifi == null || this.resolver == null) {
+            wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            this.resolver = new WiFiResolver();
+        }
         render();
         return view;
     }
@@ -56,13 +58,11 @@ public class WiFiFragment extends Fragment {
         double[] coordinates = resolver.getCoordinate(true);
         String debug = String.format("New coordinate: %s", Arrays.toString(coordinates));
         Log.d(TAG, debug);
-        //debugcoords.setText(Arrays.toString(coordinates) + "\n" + Arrays.toString(resolver.getDistances()));
         Toast.makeText(this.getActivity(), "ScanResults updated" + Arrays.toString(resolver.getDistances()), Toast.LENGTH_SHORT).show();
     }
 
     private void render() {
         double[] coordinates = resolver.getCoordinate(true);
-//        debugcoords.setText(Arrays.toString(coordinates));
         Bitmap b = Bitmap.createBitmap(1400, 2100, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
         Paint p = new Paint();
@@ -76,7 +76,6 @@ public class WiFiFragment extends Fragment {
         c.drawRect(r, p);
         p.setColor(Color.MAGENTA);
         c.drawCircle((float) coordinates[0] * 3, (float) coordinates[1] * 3, 40, p);
-//        this.scalarSeekBar.setProgress(this.scalarSeekBar.getProgress());
         ImageCanvas.setImageBitmap(b);
     }
 
@@ -92,4 +91,5 @@ public class WiFiFragment extends Fragment {
             }
         }, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
+
 }
