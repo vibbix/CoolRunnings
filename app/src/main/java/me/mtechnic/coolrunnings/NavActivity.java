@@ -73,7 +73,4 @@ public class NavActivity extends AppCompatActivity {
         ft.add(R.id.fragmentContainer, this.currentFragment).commit();
 
     }
-
-
-
 }

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ public class WiFiFragment extends Fragment {
         wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Log.d(TAG, "WiFiActivity Initialized");
         this.resolver = new WiFiResolver();
+        render();
         return view;
     }
 
@@ -61,14 +63,19 @@ public class WiFiFragment extends Fragment {
     private void render() {
         double[] coordinates = resolver.getCoordinate(true);
 //        debugcoords.setText(Arrays.toString(coordinates));
-        Bitmap b = Bitmap.createBitmap(400, 800, Bitmap.Config.ARGB_8888);
+        Bitmap b = Bitmap.createBitmap(1400, 2100, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
         Paint p = new Paint();
+        Rect r = new Rect(0, 0, 1400, 1970);
         p.setStrokeWidth(0);
         p.setColor(Color.parseColor("#FFDEAD"));
-        c.drawRect(0.0f, 0.0f, 400.0f, 800.0f, p);
-        p.setColor(Color.RED);
-        c.drawCircle((float) coordinates[0] * 3, (float) coordinates[1] * 3, 2, p);
+        c.drawRect(r, p);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(11);
+        p.setColor(Color.BLACK);
+        c.drawRect(r, p);
+        p.setColor(Color.MAGENTA);
+        c.drawCircle((float) coordinates[0] * 3, (float) coordinates[1] * 3, 40, p);
 //        this.scalarSeekBar.setProgress(this.scalarSeekBar.getProgress());
         ImageCanvas.setImageBitmap(b);
     }
