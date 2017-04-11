@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="me.mtechnic.coolrunnings.AboutFragment">
+
+    <com.github.florent37.diagonallayout.DiagonalLayout
+        android:id="@+id/diagonallayout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:elevation="10dp"
+        app:diagonal_angle="15"
+        app:diagonal_direction="left"
+        app:diagonal_position="bottom">
+
+        <com.flaviofaria.kenburnsview.KenBurnsView
+            android:id="@+id/sputnik"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/sputnik_nano" />
+    </com.github.florent37.diagonallayout.DiagonalLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textSize="11pt" />
+
+    <TextView
+        android:id="@+id/versionno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:text="v0.0.1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Developed by Andrew DeChristopher and Mark Beznos" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/btn_vibbix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            app:fb_borderColor="#FFFFFF"
+            app:fb_borderWidth="1dp"
+            app:fb_defaultColor="#000000"
+            app:fb_focusColor="#FFFFFF"
+            app:fb_fontIconResource="&#xf113;"
+            app:fb_iconPosition="left"
+            app:fb_radius="30dp"
+            app:fb_text="@string/username_mark"
+            app:fb_textColor="#FFFFFF" />
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/btn_dechristopher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            app:fb_borderColor="#FFFFFF"
+            app:fb_borderWidth="1dp"
+            app:fb_defaultColor="#000000"
+            app:fb_focusColor="#FFFFFF"
+            app:fb_fontIconResource="&#xf113;"
+            app:fb_iconPosition="left"
+            app:fb_radius="30dp"
+            app:fb_text="@string/username_dechristopher"
+            app:fb_textColor="#FFFFFF" />
+    </LinearLayout>
+</LinearLayout>
